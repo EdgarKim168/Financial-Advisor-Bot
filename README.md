@@ -1,7 +1,7 @@
 # Financial-Advisor-Bot
 Final year Project - Financial Advisor Bot for Foreign Exchange
 
-## Make sure to dowwnload the requirements.txt before running the streamlit_app. 
+## Make sure to download the requirements.txt before running the streamlit_app. 
 
 evaluate_advisor.py is used for backtesting and evaluation. This script runs the advisor logic on historical forex data and generates performance graphs, metrics, and evaluation results. It provides the charts and figures that appear in the report’s Evaluation chapter.
 
