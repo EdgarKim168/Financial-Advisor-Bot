@@ -15,7 +15,7 @@ div.stButton>button { border-radius: 9999px; padding: 0.55rem 0.9rem; }
 </style>
 """, unsafe_allow_html=True)
 
-# ---------- Tooltip CSS (for hover popouts) ----------
+# ---------- Tooltip CSS  ----------
 TOOLTIP_CSS = """
 <style>
 .tooltip { position:relative; display:inline-block; cursor:help; }
@@ -170,7 +170,7 @@ def format_full_trade_plan_text(pair_name: str, interval: str, rec: dict) -> str
     lines = [
         f"### Full Trade Plan — {pair_name}",
         f"**Bias:** {side} · **Confidence:** {conf}% · **Horizon:** {hz}",
-        "",  # spacer before details
+        "", 
     ]
 
     if side in ("BUY", "SELL") and np.isfinite(rec["sl"]) and np.isfinite(rec["tp"]):
@@ -217,7 +217,7 @@ def format_full_trade_plan_text(pair_name: str, interval: str, rec: dict) -> str
     return "\n".join(lines)
 
 
-# ---------- Sidebar (re-ordered with placeholders so Bars sits under Settings) ----------
+# ---------- Sidebar ----------
 st.title("Financial Advisor Bot")
 PAIRS = {
     "EUR/USD": "EURUSD=X", "USD/JPY": "USDJPY=X", "USD/SGD": "USDSGD=X",
@@ -227,31 +227,27 @@ PAIRS = {
 
 with st.sidebar:
     st.markdown("### Settings")
-    # create placeholder containers in the order we want to render
-    settings_box = st.container()   # select boxes live here
-    bars_box = st.container()       # Bars slider will be filled after data loads
+    settings_box = st.container()   
+    bars_box = st.container()       
     st.markdown("---")
-    abbr_box = st.container()       # Abbreviations at the bottom
+    abbr_box = st.container()       
 
-# fill settings first
 with settings_box:
     pair_name = st.selectbox("Pair", list(PAIRS.keys()), index=0, key="pair_select")
     interval_map = {"1h": "1 hour", "4h": "4 hours", "1d": "1 day"}
     interval = st.radio(
         "Interval",
-        options=list(interval_map.keys()),       # keep codes!
-        index=0,                                 # 0="1h", set 2 if you want "1d" default
+        options=list(interval_map.keys()),       
+        index=0,                                 
         horizontal=True,
         format_func=lambda v: interval_map[v],
         key="interval_radio",
     )
-
-    # History window radio (non-typable) with label mapping
     period_map = {"30d": "30 days", "60d": "60 days", "90d": "90 days", "1y": "1 year"}
     period = st.radio(
         "History window",
         options=list(period_map.keys()),
-        index=1,                                 # 1="60d"
+        index=1,                                
         horizontal=True,
         format_func=lambda v: period_map[v],
         key="period_radio",
@@ -269,8 +265,6 @@ feat_full["ATR14"] = atr(feat_full, 14)
 feat_clean = feat_full.dropna()
 latest = feat_clean.iloc[-1] if not feat_clean.empty else feat_full.iloc[-1]
 rec = make_recommendation(latest)
-
-# now fill the Bars slider in its reserved spot (right under Settings)
 total_bars = int(len(df))
 slider_key = f"bars|{symbol}|{interval}|{period}"
 with bars_box:
@@ -286,7 +280,6 @@ with bars_box:
                            value=max_slider, step=step_size, key=slider_key)
         st.caption(f"{total_bars} bars loaded: {df.index.min().date()} → {df.index.max().date()}")
 
-# finally show Abbreviations at the very bottom of the sidebar
 with abbr_box:
     ABBR = {
         "SMA": "Simple Moving Average — rolling average of price over N periods.",
